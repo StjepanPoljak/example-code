@@ -1,0 +1,38 @@
+//jednostavna client skripta
+
+VAR address
+VAR port
+VAR data
+VAR username
+
+address = 127.0.0.1
+port = 555
+
+DefaultFormat [/TXT <$D>]
+
+Output [Username: ]
+Input &username
+Output [ \n]
+
+Winsock2Init
+
+ClientLoop address port username THREAD
+
+VAR data
+
+RepeatBegin TERM data #Close
+
+Input &data
+Output [ \n]
+
+DataFormat data &data
+
+SendData data hGenSock
+
+RepeatEnd
+
+DestroyThread
+
+SocketClose hGenSock
+
+Winsock2End
