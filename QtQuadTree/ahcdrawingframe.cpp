@@ -1,13 +1,13 @@
 #include "ahcdrawingframe.h"
 
-AHCDrawingFrame::AHCDrawingFrame (QWidget *parent) : QWidget(parent), quadTree (NULL)
+AHCDrawingFrame::AHCDrawingFrame (QWidget *parent) : QWidget(parent), quadTree (nullptr)
 {
 
 }
 
 void AHCDrawingFrame::setup (int maxPoints)
 {
-    if (quadTree == NULL)
+    if (quadTree == nullptr)
     {
         quadTree = new QuadNode (QRect (0, 0,
                                         this -> width  (),
@@ -93,7 +93,7 @@ void AHCDrawingFrame::clear ()
 {
     int maxPoints = quadTree->maxPoints;
     quadTree->deleteChildNodes ();
-    quadTree = NULL;
+    quadTree = nullptr;
     setup (maxPoints);
     repaint ();
 }

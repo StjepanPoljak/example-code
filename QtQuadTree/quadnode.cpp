@@ -3,10 +3,10 @@
 QuadNode::QuadNode (QRect rect, int maxPoints) :
 
     bounds          (rect),
-    topLeft         (NULL),
-    bottomLeft      (NULL),
-    bottomRight     (NULL),
-    topRight        (NULL),
+    topLeft         (nullptr),
+    bottomLeft      (nullptr),
+    bottomRight     (nullptr),
+    topRight        (nullptr),
     points          (QVector <QPoint> (0)),
     maxPoints       (maxPoints)
 {
@@ -16,10 +16,10 @@ QuadNode::QuadNode (QRect rect, int maxPoints) :
 bool QuadNode::hasAllChildren ()
 {
 
-    if (topLeft     == NULL
-    || bottomLeft   == NULL
-    || bottomRight  == NULL
-    || topRight     == NULL)
+    if (topLeft     == nullptr
+    || bottomLeft   == nullptr
+    || bottomRight  == nullptr
+    || topRight     == nullptr)
     {
         return false;
     }
