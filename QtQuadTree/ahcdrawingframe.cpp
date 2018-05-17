@@ -92,6 +92,7 @@ void AHCDrawingFrame::paintEvent (QPaintEvent *event)
 void AHCDrawingFrame::clear ()
 {
     int maxPoints = quadTree->maxPoints;
+    quadTree->deleteChildNodes ();
     quadTree = NULL;
     setup (maxPoints);
     repaint ();

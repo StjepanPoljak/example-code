@@ -24,6 +24,7 @@ public:
 
     bool                hasAllChildren          ();
     void                createChildrenIfNeeded  ();
+    void                deleteChildNodes        ();
 
 };
 

@@ -79,13 +79,25 @@ void QuadNode::addPoint (QPoint point)
     topRight    -> addPoint (point);
 }
 
+void QuadNode::deleteChildNodes ()
+{
+    if (!hasAllChildren ()) { return; }
+
+    topLeft     -> deleteChildNodes ();
+    bottomLeft  -> deleteChildNodes ();
+    bottomRight -> deleteChildNodes ();
+    topRight    -> deleteChildNodes ();
+
+    topLeft     = NULL;
+    bottomLeft  = NULL;
+    bottomRight = NULL;
+    topRight    = NULL;
+}
+
 QuadNode::~QuadNode ()
 {
     delete topLeft;
     delete bottomLeft;
     delete bottomRight;
     delete topRight;
-
-    delete &bounds;
-    delete &points;
 }
