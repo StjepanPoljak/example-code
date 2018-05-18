@@ -15,16 +15,7 @@ QuadNode::QuadNode (QRect rect, int maxPoints) :
 
 bool QuadNode::hasAllChildren ()
 {
-
-    if (topLeft     == nullptr
-    || bottomLeft   == nullptr
-    || bottomRight  == nullptr
-    || topRight     == nullptr)
-    {
-        return false;
-    }
-
-    return true;
+    return (topLeft && bottomLeft && bottomRight && topRight);
 }
 
 void QuadNode::createChildrenIfNeeded ()
@@ -51,11 +42,11 @@ void QuadNode::createChildrenIfNeeded ()
                                 maxPoints);
 }
 
-void QuadNode::addPoint (QPoint point)
+void QuadNode::addPointWithCondition (QPoint point, bool (*fptr)(QuadNode *))
 {
     if (!bounds.contains (point)) { return; }
 
-    if (points.size () < maxPoints && !hasAllChildren ())
+    if (fptr (this))
     {
         points.append (point);
         return;
@@ -77,6 +68,14 @@ void QuadNode::addPoint (QPoint point)
     bottomLeft  -> addPoint (point);
     bottomRight -> addPoint (point);
     topRight    -> addPoint (point);
+}
+
+void QuadNode::addPoint (QPoint point)
+{
+    this->addPointWithCondition (point, [](QuadNode *node) {
+
+        return (node->points.size () < node->maxPoints && !(node->hasAllChildren ()));
+    });
 }
 
 void QuadNode::deleteChildNodes ()

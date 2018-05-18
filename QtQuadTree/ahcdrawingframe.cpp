@@ -52,14 +52,6 @@ void AHCDrawingFrame::paintEvent (QPaintEvent *event)
 
         stack.remove (stack.size() - 1);
 
-        for (int i = 0; i < curr->points.size (); i++)
-        {
-            paint-> setBrush    (QBrush (Qt::black));
-            paint-> drawEllipse (QPoint (curr->points[i].x  (),
-                                         curr->points[i].y  ()),
-                                 2, 2);
-        }
-
         if (curr->hasAllChildren ())
         {
             stack.append (curr->topLeft);
@@ -82,6 +74,14 @@ void AHCDrawingFrame::paintEvent (QPaintEvent *event)
                                    + curr->bounds.width     () / 2,
                                      curr->bounds.y         ()
                                    + curr->bounds.height    ()));
+        }
+
+        for (int i = 0; i < curr->points.size (); i++)
+        {
+            paint-> setBrush    (QBrush (Qt::black));
+            paint-> drawEllipse (QPoint (curr->points[i].x  (),
+                                         curr->points[i].y  ()),
+                                 2, 2);
         }
 
     } while (!stack.isEmpty ());

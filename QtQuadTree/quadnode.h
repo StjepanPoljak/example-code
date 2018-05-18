@@ -25,6 +25,7 @@ public:
     bool                hasAllChildren          ();
     void                createChildrenIfNeeded  ();
     void                deleteChildNodes        ();
+    void                addPointWithCondition   (QPoint point, bool (*fptr)(QuadNode *));
 
 };
 
