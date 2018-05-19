@@ -25,40 +25,16 @@ void AHCDrawingFrame::mouseReleaseEvent (QMouseEvent *event)
     repaint ();
 }
 
-void AHCDrawingFrame::paintEvent (QPaintEvent *event)
+class TraverseWithPaint
 {
-    QWidget::paintEvent (event);
 
-    if (quadTree == nullptr) { return; }
+public:
 
-    QPainter *paint = new QPainter (this);
-
-    QVector <QuadNode *> stack = { quadTree };
-
-    paint-> setBrush    (QBrush (Qt::black));
-
-    QVector <QPoint> corners = {quadTree->bounds.topLeft        (),
-                                quadTree->bounds.bottomLeft     (),
-                                quadTree->bounds.bottomRight    (),
-                                quadTree->bounds.topRight       (),
-                                quadTree->bounds.topLeft        ()};
-
-    QPolygon polygon (corners);
-    paint->drawPolyline (polygon);
-
-    do
+    TraverseWithPaint (QPainter *painter) : paint (painter) { }
+    void operator () (QuadNode *curr)
     {
-        QuadNode *curr = stack.last ();
-
-        stack.remove (stack.size() - 1);
-
-        if (curr->hasAllChildren ())
+        if (curr->hasAllChildren())
         {
-            stack.append (curr->topLeft);
-            stack.append (curr->bottomLeft);
-            stack.append (curr->bottomRight);
-            stack.append (curr->topRight);
-
             paint->setBrush (QBrush (Qt::gray));
             paint->drawLine (QPoint (curr->bounds.x         (),
                                      curr->bounds.y         ()
@@ -83,8 +59,35 @@ void AHCDrawingFrame::paintEvent (QPaintEvent *event)
                                          curr->points[i].y  ()),
                                  2, 2);
         }
+    }
 
-    } while (!stack.isEmpty ());
+private:
+
+    QPainter *paint;
+};
+
+void AHCDrawingFrame::paintEvent (QPaintEvent *event)
+{
+    QWidget::paintEvent (event);
+
+    if (quadTree == nullptr) { return; }
+
+    QPainter *paint = new QPainter (this);
+
+    paint-> setBrush    (QBrush (Qt::black));
+
+    QVector <QPoint> corners = {quadTree->bounds.topLeft        (),
+                                quadTree->bounds.bottomLeft     (),
+                                quadTree->bounds.bottomRight    (),
+                                quadTree->bounds.topRight       (),
+                                quadTree->bounds.topLeft        ()};
+
+    QPolygon polygon                (corners);
+    paint->drawPolyline             (polygon);
+
+    TraverseWithPaint ioTraverse (paint);
+
+    quadTree->traverseWithAction (ioTraverse);
 
     paint->end ();
 }
@@ -97,3 +100,4 @@ void AHCDrawingFrame::clear ()
     setup (maxPoints);
     repaint ();
 }
+

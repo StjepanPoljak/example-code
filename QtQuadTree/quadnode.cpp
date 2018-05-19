@@ -78,6 +78,8 @@ void QuadNode::addPoint (QPoint point)
     });
 }
 
+
+
 void QuadNode::deleteChildNodes ()
 {
     if (!hasAllChildren ()) { return; }
