@@ -42,37 +42,9 @@ void QuadNode::createChildrenIfNeeded ()
                                 maxPoints);
 }
 
-void QuadNode::addPointWithCondition (QPoint point, bool (*fptr)(QuadNode *))
-{
-    if (!bounds.contains (point)) { return; }
-
-    if (fptr (this))
-    {
-        points.append (point);
-        return;
-    }
-
-    createChildrenIfNeeded ();
-
-    for (QPoint prevPoint: points)
-    {
-        topLeft     -> addPoint (prevPoint);
-        bottomLeft  -> addPoint (prevPoint);
-        bottomRight -> addPoint (prevPoint);
-        topRight    -> addPoint (prevPoint);
-    }
-
-    points.clear ();
-
-    topLeft     -> addPoint (point);
-    bottomLeft  -> addPoint (point);
-    bottomRight -> addPoint (point);
-    topRight    -> addPoint (point);
-}
-
 void QuadNode::addPoint (QPoint point)
 {
-    this->addPointWithCondition (point, [](QuadNode *node) {
+    this->addPointWithPredicate (point, [](QuadNode *node) {
 
         return (node->points.size () < node->maxPoints && !(node->hasAllChildren ()));
     });

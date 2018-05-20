@@ -25,30 +25,15 @@ public:
     bool                hasAllChildren          ();
     void                createChildrenIfNeeded  ();
     void                deleteChildNodes        ();
-    void                addPointWithCondition   (QPoint point, bool (*fptr)(QuadNode *));
 
-    template <class Lambda>
-    void traverseWithAction (Lambda fptr)
-    {
-        QVector <QuadNode *> stack = { this };
+    template            <class Lambda>
+    void                addPointWithPredicate   (QPoint point, Lambda predicate);
 
-        do
-        {
-            QuadNode *curr = stack.last ();
+    template            <class Lambda>
+    void                traverseWithAction      (Lambda fptr);
 
-            fptr (curr);
-
-            stack.remove (stack.size () - 1);
-
-            if (curr->hasAllChildren ())
-            {
-                stack.append (curr->topLeft);
-                stack.append (curr->bottomLeft);
-                stack.append (curr->bottomRight);
-                stack.append (curr->topRight);
-            }
-        } while (!stack.isEmpty ());
-    }
 };
+
+#include "quadnode.tpp"
 
 #endif // QUADNODE_H

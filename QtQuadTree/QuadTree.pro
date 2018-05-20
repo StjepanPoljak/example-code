@@ -9,7 +9,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     quadnode.cpp \
-    ahcdrawingframe.cpp
+    ahcdrawingframe.cpp \
+    quadnode.tpp
 
 HEADERS += \
     mainwindow.h \
