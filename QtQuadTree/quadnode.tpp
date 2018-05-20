@@ -12,6 +12,8 @@ void QuadNode::addPointWithPredicate (QPoint point, Lambda predicate)
 
         if (!curr->bounds.contains (point)) continue;
 
+        if (curr->points.contains (point)) return;
+
         if (predicate (curr) && !curr->hasAllChildren ())
         {
             curr->points.append (point);
@@ -51,9 +53,9 @@ void QuadNode::traverseWithAction (Lambda fptr)
     {
         QuadNode *curr = stack.last ();
 
-        fptr (curr);
-
         stack.remove (stack.size () - 1);
+
+        fptr (curr);
 
         if (curr->hasAllChildren ())
         {
@@ -64,4 +66,29 @@ void QuadNode::traverseWithAction (Lambda fptr)
         }
 
     } while (!stack.isEmpty ());
+}
+
+template <class Lambda>
+void QuadNode::addPoint (QPoint point, float maxDistance, Lambda formula)
+{
+    struct AddWithMaxDistance
+    {
+        float maxDistance;
+        Lambda formula;
+
+        AddWithMaxDistance (float maxDist, Lambda distance) :
+
+            maxDistance (maxDist),
+            formula     (distance) { };
+
+        bool operator () (QuadNode *curr)
+        {
+            return formula (curr->bounds.topLeft        (),
+                            curr->bounds.bottomRight    ())
+
+                    < this->maxDistance;
+        }
+    };
+
+    this->addPointWithPredicate (point, AddWithMaxDistance (maxDistance, formula));
 }

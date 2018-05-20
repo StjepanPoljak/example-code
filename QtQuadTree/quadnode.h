@@ -22,6 +22,7 @@ public:
     QuadNode            *topRight;
 
     void                addPoint                (QPoint point, int maxPoints);
+    void                addPoint                (QPoint point, float maxDistance);
     bool                hasAllChildren          ();
     void                createChildrenIfNeeded  ();
     void                deleteChildNodes        ();
@@ -31,6 +32,9 @@ public:
 
     template            <class Lambda>
     void                traverseWithAction      (Lambda fptr);
+
+    template            <class Lambda>
+    void                addPoint                (QPoint point, float maxDistance, Lambda distance);
 
 };
 

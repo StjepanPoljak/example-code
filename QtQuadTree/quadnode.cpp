@@ -22,8 +22,8 @@ void QuadNode::createChildrenIfNeeded ()
 {
     if (hasAllChildren ()) { return; }
 
-    int newWidth    = bounds.width  () / 2;
-    int newHeight   = bounds.height () / 2;
+    float newWidth    = bounds.width  () / 2;
+    float newHeight   = bounds.height () / 2;
 
     topLeft     = new QuadNode (QRect (bounds.left (), bounds.top (),
                                        newWidth, newHeight),
@@ -44,22 +44,16 @@ void QuadNode::createChildrenIfNeeded ()
 
 void QuadNode::addPoint (QPoint point, int maxPoints)
 {
-    class AddWithMaxPoints
+    struct AddWithMaxPoints
     {
+        int maxPoints;
 
-    public:
-
-        AddWithMaxPoints (int max) :
-            maxPoints (max) { };
+        AddWithMaxPoints (int max) : maxPoints (max) { };
 
         bool operator () (QuadNode *curr)
         {
-            return curr->points.size () < this->maxPoints && !(curr->hasAllChildren ());
+            return curr->points.size () < this->maxPoints;
         }
-
-    private:
-
-        int maxPoints;
     };
 
     this->addPointWithPredicate (point, AddWithMaxPoints (maxPoints));

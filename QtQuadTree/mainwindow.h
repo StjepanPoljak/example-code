@@ -11,19 +11,19 @@ class MainWindow : public QWidget
 
 public:
 
-    explicit 		MainWindow 		(QWidget *parent = nullptr);
-    void 		setup 			();
+    explicit            MainWindow  (QWidget *parent = nullptr);
+    void                setup       ();
 
 private:
 
     AHCDrawingFrame 	*ahcFrame;
-    QPushButton 	*button;
+    QPushButton         *button;
 
 signals:
 
 public slots:
 
-    void 		buttonWasClicked 	();
+    void 		buttonWasClicked    ();
 };
 
 #endif // MAINWINDOW_H
