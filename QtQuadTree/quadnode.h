@@ -10,18 +10,18 @@ class QuadNode
 public:
 
     QuadNode                                    (QRect rect, int maxPoints);
-    void                addPoint                (QPoint point);
     ~QuadNode                                   ();
+
+    QRect               bounds;
+    int                 maxPoints;
+    QVector <QPoint>    points;
 
     QuadNode            *topLeft;
     QuadNode            *bottomLeft;
     QuadNode            *bottomRight;
     QuadNode            *topRight;
 
-    QRect               bounds;
-    int                 maxPoints;
-    QVector <QPoint>    points;
-
+    void                addPoint                (QPoint point, int maxPoints);
     bool                hasAllChildren          ();
     void                createChildrenIfNeeded  ();
     void                deleteChildNodes        ();

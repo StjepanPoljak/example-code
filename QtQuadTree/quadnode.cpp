@@ -3,19 +3,19 @@
 QuadNode::QuadNode (QRect rect, int maxPoints) :
 
     bounds          (rect),
+    maxPoints       (maxPoints),
+    points          (QVector <QPoint> (0)),
     topLeft         (nullptr),
     bottomLeft      (nullptr),
     bottomRight     (nullptr),
-    topRight        (nullptr),
-    points          (QVector <QPoint> (0)),
-    maxPoints       (maxPoints)
+    topRight        (nullptr)
 {
 
 }
 
 bool QuadNode::hasAllChildren ()
 {
-    return (topLeft && bottomLeft && bottomRight && topRight);
+    return topLeft && bottomLeft && bottomRight && topRight;
 }
 
 void QuadNode::createChildrenIfNeeded ()
@@ -42,19 +42,32 @@ void QuadNode::createChildrenIfNeeded ()
                                 maxPoints);
 }
 
-void QuadNode::addPoint (QPoint point)
+void QuadNode::addPoint (QPoint point, int maxPoints)
 {
-    this->addPointWithPredicate (point, [](QuadNode *node) {
+    class AddWithMaxPoints
+    {
 
-        return (node->points.size () < node->maxPoints && !(node->hasAllChildren ()));
-    });
+    public:
+
+        AddWithMaxPoints (int max) :
+            maxPoints (max) { };
+
+        bool operator () (QuadNode *curr)
+        {
+            return curr->points.size () < this->maxPoints && !(curr->hasAllChildren ());
+        }
+
+    private:
+
+        int maxPoints;
+    };
+
+    this->addPointWithPredicate (point, AddWithMaxPoints (maxPoints));
 }
-
-
 
 void QuadNode::deleteChildNodes ()
 {
-    if (!hasAllChildren ()) { return; }
+    if (!hasAllChildren ()) return;
 
     delete topLeft;
     delete bottomLeft;

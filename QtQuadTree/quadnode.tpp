@@ -2,30 +2,44 @@
 template <class Lambda>
 void QuadNode::addPointWithPredicate (QPoint point, Lambda predicate)
 {
-    if (!bounds.contains (point)) { return; }
+    QVector <QuadNode *> stack = { this };
 
-    if (predicate (this))
+    do
     {
-        points.append (point);
-        return;
-    }
+        QuadNode *curr = stack.last ();
 
-    createChildrenIfNeeded ();
+        stack.remove (stack.size () - 1);
 
-    for (QPoint prevPoint: points)
-    {
-        topLeft     -> addPoint (prevPoint);
-        bottomLeft  -> addPoint (prevPoint);
-        bottomRight -> addPoint (prevPoint);
-        topRight    -> addPoint (prevPoint);
-    }
+        if (!curr->bounds.contains (point)) continue;
 
-    points.clear ();
+        if (predicate (curr) && !curr->hasAllChildren ())
+        {
+            curr->points.append (point);
+            return;
+        }
 
-    topLeft     -> addPoint (point);
-    bottomLeft  -> addPoint (point);
-    bottomRight -> addPoint (point);
-    topRight    -> addPoint (point);
+        curr->createChildrenIfNeeded ();
+
+        for (QPoint prevPoint: curr->points)
+        {
+            if (curr->topLeft       ->bounds.contains   (prevPoint))
+                curr->topLeft       ->points.append     (prevPoint);
+            if (curr->bottomLeft    ->bounds.contains   (prevPoint))
+                curr->bottomLeft    ->points.append     (prevPoint);
+            if (curr->bottomRight   ->bounds.contains   (prevPoint))
+                curr->bottomRight   ->points.append     (prevPoint);
+            if (curr->topRight      ->bounds.contains   (prevPoint))
+                curr->topRight      ->points.append     (prevPoint);
+        }
+
+        curr->points.clear  ();
+        stack.clear         ();
+        stack.append        (curr->topLeft);
+        stack.append        (curr->bottomLeft);
+        stack.append        (curr->bottomRight);
+        stack.append        (curr->topRight);
+
+    } while (!stack.isEmpty ());
 }
 
 template <class Lambda>
@@ -48,5 +62,6 @@ void QuadNode::traverseWithAction (Lambda fptr)
             stack.append (curr->bottomRight);
             stack.append (curr->topRight);
         }
+
     } while (!stack.isEmpty ());
 }

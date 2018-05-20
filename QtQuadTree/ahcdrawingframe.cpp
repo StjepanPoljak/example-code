@@ -8,19 +8,18 @@ AHCDrawingFrame::AHCDrawingFrame (QWidget *parent) : QWidget(parent), quadTree (
 void AHCDrawingFrame::setup (int maxPoints)
 {
     if (quadTree == nullptr)
-    {
+
         quadTree = new QuadNode (QRect (0, 0,
                                         this -> width  (),
                                         this -> height ()),
                                  maxPoints);
-    }
 }
 
 void AHCDrawingFrame::mouseReleaseEvent (QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent (event);
 
-    quadTree->addPoint (QPoint (event->x (), event->y ()));
+    quadTree->addPoint (QPoint (event->x (), event->y ()), 1);
 
     repaint ();
 }
@@ -70,7 +69,7 @@ void AHCDrawingFrame::paintEvent (QPaintEvent *event)
 {
     QWidget::paintEvent (event);
 
-    if (quadTree == nullptr) { return; }
+    if (quadTree == nullptr) return;
 
     QPainter *paint = new QPainter (this);
 
@@ -94,10 +93,10 @@ void AHCDrawingFrame::paintEvent (QPaintEvent *event)
 
 void AHCDrawingFrame::clear ()
 {
-    int maxPoints = quadTree->maxPoints;
-    quadTree->deleteChildNodes ();
-    quadTree = nullptr;
-    setup (maxPoints);
-    repaint ();
+    int maxPoints   = quadTree->maxPoints;
+    quadTree        ->deleteChildNodes ();
+    quadTree        = nullptr;
+    setup           (maxPoints);
+    repaint         ();
 }
 
